@@ -2,14 +2,11 @@
 
 require_once __DIR__ . "/../config/config.php";
 
-function getPDO(): PDO {
-    global $dbHost, $dbName, $dbUser, $dbPassword;
+$db_obj = new mysqli($dbHost,$dbUser,$dbPassword,$dbName);
 
-    $dsn = "mysql:host=$dbHost;dbname=$dbName;charset=utf8mb4";
-    $options = [
-        PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
-        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-    ];
-
-    return new PDO($dsn, $dbUser, $dbPassword, $options);
+if($db_obj->connect_errno){
+    die("DB Connection failed: " . $db_obj->connect_error);
 }
+
+$db_obj->set_charset("utf8mb4");
+
