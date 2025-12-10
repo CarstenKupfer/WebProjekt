@@ -1,0 +1,394 @@
+/* GLOBAL RESET */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+/* Hintergrund + Standardschriftfarbe */
+body {
+    background: #f2f0eb;  /* warmer Ton, passend zum Logo */
+    color: #222;
+}
+
+/* NAVBAR */
+.top-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 24px;
+    border-bottom: 1px solid #ddd;
+    background: #f2f0eb;
+}
+html, body {
+    height: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+.page-content {
+    flex: 1;   /* schiebt Footer nach unten */
+}
+
+
+a.logo,
+a.logo:hover, 
+a.logo:visited,
+a.logo:active,
+a.logo:focus {
+    text-decoration: none;
+    font-weight: 700;
+    color: black;
+}
+
+.nav-links a {
+    margin-left: 16px;
+    text-decoration: none;
+    color: #333;
+    font-size: 0.95rem;
+}
+
+.nav-links a:hover {
+    text-decoration: underline;
+}
+
+/* SEITENINHALT */
+.page-content {
+    max-width: 1000px;
+    margin: 24px auto;
+    padding: 0 16px;
+    background: #f2f0eb;
+}
+
+/* HERO-TEXT */
+.hero h1 {
+    font-size: 2rem;
+    margin-bottom: 8px;
+    text-align: center;
+}
+
+.hero .claim {
+    margin-top: 4px;
+    margin-bottom: 24px;
+    font-size: 1.1rem;
+    color: #555;
+    text-align: center;
+}
+
+/* FOOTER */
+.site-footer {
+    margin-top: 40px;
+    text-align: center;
+    padding: 12px;
+    font-size: 0.85rem;
+    color: #777;
+    border-top: 1px solid #ddd;
+    background: #f2f0eb;
+}
+
+/* IMG SIZES */
+img.img-small {
+    max-width: 200px;
+    width: 100%;
+}
+
+img.img-medium {
+    max-width: 450px;
+    width: 100%;
+}
+
+img.img-large {
+    max-width: 700px;
+    width: 100%;
+}
+
+img.img-center {
+    display: block;
+    margin: 20px auto;
+    border-radius: 8px;
+}
+
+img.img-border-medium{
+    border: #222;
+    border-radius: 10%;
+    border-style: solid;
+}
+
+/* LOGIN SEITE */
+.login-wrapper {
+    max-width: 900px;
+    margin: 24px auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 24px;
+    padding: 0 16px;
+    background: #f2f0eb;
+}
+
+.login-box {
+    flex: 1;
+}
+
+.login-box h1 {
+    margin-bottom: 15px;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.login-form input {
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+.login-btn {
+    margin-top: 10px;
+    padding: 12px;
+    background: #ff6b00;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.login-btn:hover {
+    background: #ff8a33;
+}
+
+.login-error {
+    color: red;
+    margin-bottom: 10px;
+}
+
+.login-image-box {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.login-image {
+    max-width: 350px;
+    width: 100%;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+.register-link {
+    text-align: center;
+    margin-top: 20px;
+}
+
+/* ====== STARTSEITE: LOGO + EXPLORE-SYMBOL ====== */
+
+.hero-row {
+    max-width: 1000px;
+    margin: 0 auto 40px;
+    padding: 0 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 60px;
+}
+
+.hero-logo {
+    display: block;
+    max-width: 420px;
+}
+
+/* Explore-Symbol als Button */
+.explore-link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    padding: 18px 24px;
+    border-radius: 18px;
+    border: 1px solid rgba(0,0,0,0.08);
+    background: #f2f0eb;
+    box-shadow: 0 10px 26px rgba(0,0,0,0.18);
+    color: #222;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    cursor: pointer;
+}
+
+.explore-icon {
+    width: 120px;
+    height: auto;
+    margin-bottom: 8px;
+}
+
+.explore-label {
+    text-align: center;
+}
+
+/* Hover-Effekt */
+.explore-link:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 16px 36px rgba(0,0,0,0.22);
+}
+
+/* Optional: etwas kompakter auf sehr kleinen Screens */
+@media (max-width: 800px) {
+    .hero-row {
+        flex-direction: column;
+        gap: 24px;
+    }
+
+    .hero-logo {
+        max-width: 320px;
+    }
+}
+
+/* ===========================
+   EXPLORE-SEITE
+   =========================== */
+
+.explore-layout {
+    max-width: 1000px;
+    margin: 24px auto 40px;
+    padding: 0 16px;
+    display: flex;
+    gap: 32px;
+    align-items: flex-start;
+}
+
+/* Linke Spalte: Feed */
+.posts-column {
+    flex: 2;
+}
+
+/* Überschrift + Button in einer Zeile */
+.explore-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.explore-heading {
+    font-size: 1.6rem;
+}
+
+/* Button "+ Beitrag melden" */
+.post-toggle-btn {
+    padding: 8px 14px;
+    border-radius: 999px;
+    border: 1px solid #ccc;
+    background: #ffffff;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: background 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
+}
+
+.post-toggle-btn:hover {
+    background: #ff6b00;
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.18);
+    transform: translateY(-1px);
+}
+
+.posts-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.no-posts-hint {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+/* Rechte Spalte: Formular – STARTET VERSTECKT */
+.post-form-column {
+    flex: 1;
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 16px 18px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+    position: sticky;
+    top: 90px;
+    display: none;              /* WICHTIG: erst unsichtbar */
+}
+
+/* Wird sichtbar, wenn Klasse "visible" per JS gesetzt wird */
+.post-form-column.visible {
+    display: block;
+}
+
+.post-form-heading {
+    font-size: 1.15rem;
+    margin-bottom: 12px;
+}
+
+.post-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.post-form .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.post-form label {
+    font-size: 0.9rem;
+}
+
+.post-form input[type="text"],
+.post-form textarea,
+.post-form input[type="file"] {
+    padding: 8px 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 0.9rem;
+    background: #f7f4ee;
+}
+
+.post-form textarea {
+    resize: vertical;
+}
+
+.post-submit-btn {
+    margin-top: 4px;
+    padding: 10px 14px;
+    width: 100%;
+    border: none;
+    border-radius: 999px;
+    background: #ff6b00;
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+}
+
+.post-submit-btn:hover {
+    background: #ff8a33;
+}
+
+/* Mobile: untereinander statt nebeneinander */
+@media (max-width: 900px) {
+    .explore-layout {
+        flex-direction: column;
+    }
+
+    .post-form-column {
+        position: static;
+        width: 100%;
+    }
+}
