@@ -1,10 +1,8 @@
 <?php
 
-require_once __DIR__ . "/../util/dbUtil.php";
-
-if($db_obj){
+try {
+    require_once __DIR__ . "/../util/dbUtil.php";
     echo "Datenbankverbindung erfolgreich!";
-}else{
-    echo "Verbindung fehlgeschlagen";
+} catch (RuntimeException $e) {
+    echo "Fehler: " . $e->getMessage();
 }
-
