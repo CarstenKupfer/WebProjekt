@@ -1,3 +1,5 @@
 nur FH-Mail erlauben Explore Page zu öffnen (Sicherheitscheck)
 
 Auf explore page button vllt. + um neuen post zu machen. (Kleines Fenster öffnet sich)
+
+Michi ist cool
