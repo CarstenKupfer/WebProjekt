@@ -13,33 +13,55 @@ if (isset($_SESSION['user_id'])) {
 }
 
 // -------------------------------------------
-// LOGIN LOGIK (Pseudo User)
+// LOGIN LOGIK (DB)
 // -------------------------------------------
+require_once __DIR__ . "/util/dbUtil.php";
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Benutzer-Eingaben holen
-    $email = $_POST['email'] ?? '';
+    $email = trim($_POST['email'] ?? '');
     $password = $_POST['password'] ?? '';
 
-    // Pseudo-User für Testzwecke
-    $pseudoEmail = "test@fh.at";
-    $pseudoPassword = "1234";
-
-    // Check ob Daten korrekt
-    if ($email === $pseudoEmail && $password === $pseudoPassword) {
-
-        // Session setzen → Benutzer ist eingeloggt
-        $_SESSION['user_id'] = 1;
-
-        // Session setzten wenn eingeloggt = user
-        $_SESSION['role'] = 'user';
-
-        // Weiterleitung zur Startseite
-        header("Location: index.php");
-        exit;
-
+    if ($email === "" || $password === "") {
+        $error = "Bitte E-Mail und Passwort eingeben.";
     } else {
-        $error = "Login fehlgeschlagen. Bitte versuche es erneut.";
+        try {
+            $db = getDb();
+
+            $stmt = $db->prepare("SELECT id, password_hash, role, is_blocked FROM users WHERE email = ? LIMIT 1");
+            if (!$stmt) {
+                throw new RuntimeException($db->error);
+            }
+
+            $stmt->bind_param("s", $email);
+            $stmt->execute();
+            $res = $stmt->get_result();
+            $user = $res->fetch_assoc();
+            $stmt->close();
+
+            if (!$user) {
+                $error = "Login fehlgeschlagen. <br> Bitte erneut versuchen.";
+            } elseif ((int)$user["is_blocked"] === 1) {
+                $error = "Dieser Account ist gesperrt.";
+            } elseif (!password_verify($password, $user["password_hash"])) {
+                $error = "Login fehlgeschlagen. <br> Bitte erneut versuchen.";
+            } else {
+                // Bei erfolgreichem Login
+                $_SESSION["user_id"] = (int)$user["id"];
+                $_SESSION["role"] = $user["role"];
+
+                // Session-Timing für inaktiviät tracken setzten
+                $_SESSION['login_time'] = time();
+                $_SESSION['last_activity'] = time();
+
+                header("Location: index.php");
+                exit;
+            }
+
+        } catch (Throwable $e) {
+            $error = "DB-Fehler: " . $e->getMessage();
+        }
     }
 }
 

@@ -6,3 +6,14 @@ try {
 } catch (RuntimeException $e) {
     echo "Fehler: " . $e->getMessage();
 }
+
+echo "<br>";
+
+
+try {
+    $db = getDb();
+    echo "DB OK ";
+} catch (Throwable $e) {
+    echo "DB FEHLER : " . $e->getMessage();
+}
+

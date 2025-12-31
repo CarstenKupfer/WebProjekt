@@ -2,4 +2,11 @@ nur FH-Mail erlauben Explore Page zu öffnen (Sicherheitscheck)
 
 Auf explore page button vllt. + um neuen post zu machen. (Kleines Fenster öffnet sich)
 
-Michi ist cool
+DaSt:
+
+Register-Seite mit Datenbank verknüpfen
+Profil-Seite machen
+Admin-Seite machen
+Neues Design mit Bootstrap
+localhost/myphpadmin bei allen gleich machen 
+
