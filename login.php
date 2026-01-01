@@ -41,11 +41,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->close();
 
             if (!$user) {
-                $error = "Login fehlgeschlagen. <br> Bitte erneut versuchen.";
+                $error = "E-Mail oder Passwort falsch <br> Bitte erneut versuchen.";
             } elseif ((int)$user["is_blocked"] === 1) {
                 $error = "Dieser Account ist gesperrt.";
             } elseif (!password_verify($password, $user["password_hash"])) {
-                $error = "Login fehlgeschlagen. <br> Bitte erneut versuchen.";
+                $error = "E-Mail oder Passwort falsch. <br> Bitte erneut versuchen.";
             } else {
                 // Bei erfolgreichem Login
                 $_SESSION["user_id"] = (int)$user["id"];

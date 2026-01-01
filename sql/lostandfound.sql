@@ -74,7 +74,7 @@ CREATE TABLE `claims` (
 
 -- --------------------------------------------------------
 -- Seed data (test user)
--- Login: test@fh.at / 1234
+-- Login: test@fh.at / 1234 (passwordhash)
 -- --------------------------------------------------------
 INSERT INTO `users` (`id`, `name`, `email`, `password_hash`, `role`, `is_blocked`, `created_at`) VALUES
 (1, 'Test User', 'test@fh.at', '$2y$10$LvG7b.36AS6AhauzRRdtB.x8qdHDMmLLy7nQ5IhSxYdMimB6vZJNq', 'user', 0, '2025-12-31 17:08:37');

@@ -29,7 +29,7 @@ if (isset($_SESSION['login_time']) &&
     session_destroy();
 
     header("Location: login.php");
-    exit;
+    exit();
 }
 
 // Zeit aktualisieren
