@@ -4,9 +4,8 @@ Auf explore page button vllt. + um neuen post zu machen. (Kleines Fenster öffne
 
 DaSt:
 
-Register-Seite mit Datenbank verknüpfen
+Register-Seite mit Datenbank verknüpfen fertig
 Profil-Seite machen
 Admin-Seite machen
 Neues Design mit Bootstrap
 localhost/myphpadmin bei allen gleich machen 
-
