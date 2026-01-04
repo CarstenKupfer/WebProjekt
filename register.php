@@ -20,13 +20,18 @@ require_once __DIR__ . "/util/dbUtil.php";
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $email = trim($_POST['email'] ?? '');
+    $username = trim($_POST["username"] ?? "");
     $password = $_POST['password'] ?? '';
     $password2 = $_POST['password2'] ?? '';
 
-    if($email === "" || $password === "" || $password2 === ""){
-        $error = "Bitte E-Mail und Passwort eingeben.";
+    if($email === "" || $username === "" || $password === "" || $password2 === ""){
+        $error = "Bitte alle Felder ausfüllen.";
     }elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)){
-        $error = "Bitte eine gültige E-Mail-Adresse eingeben";
+        $error = "Bitte eine gültige E-Mail-Adresse eingeben.";
+    }elseif (strlen($username) < 3 || strlen($username) > 30){
+        $error = "Username muss zwischen 3 und 30 Zeichen lang sein.";
+    }elseif(!preg_match('/^[a-zA-Z0-9_]+$/', $username)){
+        $error = "Username darf nur Buchstaben, Zahlen und _ enthalten.";
     }elseif($password !== $password2){
         $error = "Passwörter stimmen nicht überein.";
     }else {
@@ -42,23 +47,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->bind_param("s",$email);
             $stmt->execute();
             $res = $stmt->get_result();
-            $existing = $res->fetch_assoc();
+            $emailExists = $res->fetch_assoc();
             $stmt->close();
 
-            if($existing){
+            if($emailExists){
                 $error = "Diese E-Mail ist bereits registriert.";
             }else{
-                // Neuen User anlegen
-                $passwordHash = password_hash($password, PASSWORD_DEFAULT);
-
-                $name = strstr($email, "@", true);
-
-                $stmt = $db->prepare("INSERT INTO users (name, email, password_hash, role) VALUES (?, ?, ?, 'user')");
+                // Check ob Username schon vorhanden
+                $stmt = $db->prepare("SELECT id FROM users WHERE username = ? LIMIT 1");
                 if(!$stmt){
                     throw new RuntimeException($db->error);
                 }
 
-                $stmt->bind_param("sss",$name, $email, $passwordHash);
+                $stmt->bind_param("s",$username);
+                $stmt->execute();
+                $res = $stmt->get_result();
+                $usernameExists = $res->fetch_assoc();
+                $stmt->close();
+                if($usernameExists){
+                    $error = "Dieser Username ist bereits registriert.";
+                }else{
+                // Neuen User anlegen
+                $passwordHash = password_hash($password, PASSWORD_DEFAULT);
+
+                $stmt = $db->prepare("INSERT INTO users (username, email, password_hash, role) VALUES (?, ?, ?, 'user')");
+                if(!$stmt){
+                    throw new RuntimeException($db->error);
+                }
+
+                $stmt->bind_param("sss",$username, $email, $passwordHash);
                 $stmt->execute();
                 $stmt->close();
 
@@ -70,6 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 header("Location: index.php");
                 exit();
+                }
             }
         }catch (Throwable $e){
             $error = "DB-FEHLER: " . $e->getMessage();
@@ -94,7 +112,10 @@ include __DIR__ . '/includes/header.php';
         <form method="post" class="login-form">
 
             <label for="email">E-Mail</label>
-            <input type="email" id="email" name="email" required>
+            <input type="email" id="email" name="email" required value="<?= htmlspecialchars($email ?? "", ENT_QUOTES, "UTF-8") ?>">
+
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" required value="<?= htmlspecialchars($username ?? "", ENT_QUOTES, "UTF-8") ?>">
 
             <label for="password">Passwort</label>
             <input type="password" id="password" name="password" required>

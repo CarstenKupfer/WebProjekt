@@ -20,32 +20,32 @@ require_once __DIR__ . "/util/dbUtil.php";
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Benutzer-Eingaben holen
-    $email = trim($_POST['email'] ?? '');
+    $username = trim($_POST['username'] ?? '');
     $password = $_POST['password'] ?? '';
 
-    if ($email === "" || $password === "") {
-        $error = "Bitte E-Mail und Passwort eingeben.";
+    if ($username === "" || $password === "") {
+        $error = "Bitte Username und Passwort eingeben.";
     } else {
         try {
             $db = getDb();
 
-            $stmt = $db->prepare("SELECT id, password_hash, role, is_blocked FROM users WHERE email = ? LIMIT 1");
+            $stmt = $db->prepare("SELECT id, password_hash, role, is_blocked FROM users WHERE username = ? LIMIT 1");
             if (!$stmt) {
                 throw new RuntimeException($db->error);
             }
 
-            $stmt->bind_param("s", $email);
+            $stmt->bind_param("s", $username);
             $stmt->execute();
             $res = $stmt->get_result();
             $user = $res->fetch_assoc();
             $stmt->close();
 
             if (!$user) {
-                $error = "E-Mail oder Passwort falsch <br> Bitte erneut versuchen.";
+                $error = "Username oder Passwort falsch <br> Bitte erneut versuchen.";
             } elseif ((int)$user["is_blocked"] === 1) {
                 $error = "Dieser Account ist gesperrt.";
             } elseif (!password_verify($password, $user["password_hash"])) {
-                $error = "E-Mail oder Passwort falsch. <br> Bitte erneut versuchen.";
+                $error = "Username oder Passwort falsch. <br> Bitte erneut versuchen.";
             } else {
                 // Bei erfolgreichem Login
                 $_SESSION["user_id"] = (int)$user["id"];
@@ -80,8 +80,8 @@ include __DIR__ . '/includes/header.php';
         <?php endif; ?>
 
         <form method="post" class="login-form">
-            <label for="email">E-Mail</label>
-            <input type="text" id="email" name="email" required>
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" required value="<?= htmlspecialchars($username ?? "", ENT_QUOTES, "UTF-8") ?>">
 
             <label for="password">Passwort</label>
             <input type="password" id="password" name="password" required>
