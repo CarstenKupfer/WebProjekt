@@ -16,16 +16,18 @@ include __DIR__ . '/includes/header.php';
 
 <section class="explore-layout">
 
+    <!-- Checkbox, um das Formular rechts ein- / auszublenden -->
+    <input type="checkbox" id="toggle-post-form" class="toggle-checkbox">
+
     <!-- LINKE SPALTE: Beiträge / Feed -->
     <div class="posts-column">
 
         <div class="explore-topbar">
             <h1 class="explore-heading">Gegenstände entdecken</h1>
 
-            <!-- Button, um das Formular rechts ein- / auszublenden -->
-            <button type="button" id="toggle-post-form" class="post-toggle-btn">
+            <label for="toggle-post-form" class="post-toggle-btn">
                 + Beitrag melden
-            </button>
+            </label>
         </div>
 
         <div class="posts-list">
@@ -37,7 +39,7 @@ include __DIR__ . '/includes/header.php';
     </div>
 
     <!-- RECHTE SPALTE: Beitrag erstellen (startet versteckt) -->
-    <aside class="post-form-column" id="post-form-column">
+    <aside class="post-form-column">
         <h2 class="post-form-heading">Neuen Gegenstand melden</h2>
 
         <form class="post-form" method="post" enctype="multipart/form-data">
@@ -61,22 +63,7 @@ include __DIR__ . '/includes/header.php';
             <button type="submit" class="post-submit-btn">Posten</button>
         </form>
     </aside>
-
 </section>
-
-<script>
-// Formular-Spalte per Button ein-/ausblenden
-document.addEventListener('DOMContentLoaded', function () {
-    const toggleBtn = document.getElementById('toggle-post-form');
-    const formCol  = document.getElementById('post-form-column');
-
-    if (toggleBtn && formCol) {
-        toggleBtn.addEventListener('click', function () {
-            formCol.classList.toggle('visible');
-        });
-    }
-});
-</script>
 
 <?php
 // Footer einbinden

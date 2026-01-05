@@ -284,6 +284,8 @@ img.img-border-medium{
 
 /* Button "+ Beitrag melden" */
 .post-toggle-btn {
+    display: inline-block;
+    line-height: 1;
     padding: 8px 14px;
     border-radius: 999px;
     border: 1px solid #ccc;
@@ -299,6 +301,12 @@ img.img-border-medium{
     color: #ffffff;
     box-shadow: 0 4px 12px rgba(0,0,0,0.18);
     transform: translateY(-1px);
+}
+
+/* Checkbox verstecken*/
+.toggle-checkbox{
+    position: absolute;
+    left: -9999px;
 }
 
 .posts-list {
@@ -321,13 +329,19 @@ img.img-border-medium{
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
     position: sticky;
     top: 90px;
-    display: none;              /* WICHTIG: erst unsichtbar */
+    
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(20px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
-/* Wird sichtbar, wenn Klasse "visible" per JS gesetzt wird */
-.post-form-column.visible {
-    display: block;
+.toggle-checkbox:checked ~ .post-form-column {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateX(0);
 }
+
 
 .post-form-heading {
     font-size: 1.15rem;
