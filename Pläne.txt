@@ -6,3 +6,5 @@ Profil-Seite machen
 Admin-Seite machen
 Neues Design mit Bootstrap
 localhost/myphpadmin bei allen gleich machen
+
+explore.php -> Neuste Beiträge "filtern", sowie bei Beiträgen die älter sind als 30 Tage (Badge hinzufügen (alter Post))

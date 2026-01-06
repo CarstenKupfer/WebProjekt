@@ -397,6 +397,38 @@ img.img-border-medium{
     background: #ff8a33;
 }
 
+/* FEED */
+
+.pagination{
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin: 30px;
+}
+
+.pagination a{
+    padding:6px 12px;
+    border-radius:6px;
+    text-decoration:none;
+    border:1px solid #ccc;
+    color:#333;
+    font-size:0.9rem;
+}
+
+.pagination a.active{
+    background:#ff6b00;
+    color:white;
+    border-color:#ff6b00;
+}
+
+.post-image{
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    border-radius: 10px;
+    border: 1px solid #eee;
+}
+
 /* Mobile: untereinander statt nebeneinander */
 @media (max-width: 900px) {
     .explore-layout {

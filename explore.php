@@ -32,7 +32,7 @@ if($_SERVER["REQUEST_METHOD"] === "POST"){
         if(!empty($_FILES["image"]["name"])){
             $filename = basename($_FILES["image"]["name"]);
             $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
-            $allowed = ["pdf","jpg","jpeg","png"];
+            $allowed = ["pdf","jpg","jpeg", "jfif","png"];
              
             if(!in_array($ext, $allowed)){
                 $error = "Nur PDF, JPG, oder PNG erlaubt.";
@@ -57,10 +57,47 @@ if($_SERVER["REQUEST_METHOD"] === "POST"){
 
     }
 
-
-
 }
 
+// ----------------------------
+// FEED LADEN
+// ----------------------------
+
+$itemsPerPage = 5;
+
+$page = (int)($_GET["page"] ?? 1);
+if($page < 1){
+    $page = 1;
+}
+
+$offset = ($page - 1) * $itemsPerPage;
+
+try{
+    $db = getDb();
+
+    $sql = "SELECT i.id, i.type, i.title, i.description, i.location, i.event_date, i.image_path, i.created_at, u.username
+    FROM items i JOIN users u ON u.id = i.user_id ORDER BY i.created_at DESC LIMIT ? OFFSET ?";
+
+    $stmt = $db->prepare($sql);
+    $stmt->bind_param("ii", $itemsPerPage, $offset);
+    $stmt->execute();
+    $res = $stmt->get_result();
+    $items = $res->fetch_all(MYSQLI_ASSOC);
+    $stmt->close();
+
+    $resCount = $db->query("SELECT COUNT(*) AS cnt FROM items");
+    if(!$resCount){
+        throw new RuntimeException($db->error);
+    }
+
+    $totalItems = (int)$resCount->fetch_assoc()["cnt"];
+    $totalPages = (int)ceil($totalItems / $itemsPerPage);
+
+}catch (Throwable $e){
+    $feedError = "Feed konnte nicht geladen werden: " . $e->getMessage();
+    $items = [];
+    $totalPages = 1;
+}
 
 // Header + Navigation laden
 include __DIR__ . '/includes/header.php';
@@ -83,13 +120,84 @@ include __DIR__ . '/includes/header.php';
         </div>
 
         <div class="posts-list">
-            <!-- Noch keine echten Beiträge – später mit DB füllen -->
-            <p class="no-posts-hint">
-                Noch keine Beiträge vorhanden. Sei der Erste, der einen Gegenstand meldet.
-            </p>
-        </div>
-    </div>
 
+    <?php if (isset($feedError)): ?>
+        <p class="login-error"><?= htmlspecialchars($feedError, ENT_QUOTES, 'UTF-8') ?></p>
+    <?php endif; ?>
+
+    <?php if (empty($items)): ?>
+        <p class="no-posts-hint">
+            Noch keine Beiträge vorhanden. Sei der Erste, der einen Gegenstand meldet.
+        </p>
+    <?php else: ?>
+
+        <?php foreach ($items as $item): ?>
+            <article class="post-card">
+                <div class="post-card-top">
+                    <div class="post-badge <?= $item['type'] === 'lost' ? 'badge-lost' : 'badge-found' ?>">
+                        <?= htmlspecialchars($item['type'] === 'lost' ? 'VERLOREN' : 'GEFUNDEN', ENT_QUOTES, 'UTF-8') ?>
+                    </div>
+
+                    <div class="post-meta">
+                        <span class="post-user">@<?= htmlspecialchars($item['username'], ENT_QUOTES, 'UTF-8') ?></span>
+                    </div>
+                </div>
+
+                <h3 class="post-title"><?= htmlspecialchars($item['title'], ENT_QUOTES, 'UTF-8') ?></h3>
+
+                <p class="post-info">
+                    <strong>Ort:</strong> <?= htmlspecialchars($item['location'], ENT_QUOTES, 'UTF-8') ?>
+                    &nbsp;|&nbsp;
+                    <strong>Datum:</strong> <?= date("d.m.Y", strtotime($item["event_date"])) ?>
+                </p>
+
+                <p class="post-desc">
+                    <?= nl2br(htmlspecialchars($item['description'], ENT_QUOTES, 'UTF-8')) ?>
+                </p>
+
+                <?php if (!empty($item['image_path'])): ?>
+                    <?php
+                        $path = $item['image_path'];
+                        $ext = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+                    ?>
+
+                    <?php if ($ext === 'pdf'): ?>
+                        <a class="post-file"
+                           href="<?= htmlspecialchars($path, ENT_QUOTES, 'UTF-8') ?>"
+                           target="_blank" rel="noopener">
+                            PDF ansehen
+                        </a>
+                    <?php else: ?>
+                        <a href="<?= htmlspecialchars($path, ENT_QUOTES, "UTF-8") ?>" target="_blank" rel="noopener">
+                        <img class="post-image"
+                             src="<?= htmlspecialchars($path, ENT_QUOTES, 'UTF-8') ?>"
+                             alt="Item Bild">
+                        </a>     
+                    <?php endif; ?>
+                <?php endif; ?>
+            </article>
+        <?php endforeach; ?>
+    <?php endif; ?>
+</div>
+    <?php if ($totalPages > 1): ?>
+        <div class="pagination">
+            <?php if ($page > 1): ?>
+            <a href="explore.php?page=<?= $page - 1 ?>">← Zurück</a>
+        <?php endif; ?>
+
+        <?php for ($p = 1; $p <= $totalPages; $p++): ?>
+            <a href="explore.php?page=<?= $p ?>"
+               class="<?= $p === $page ? 'active' : '' ?>">
+                <?= $p ?>
+            </a>
+        <?php endfor; ?>
+
+        <?php if ($page < $totalPages): ?>
+            <a href="explore.php?page=<?= $page + 1 ?>">Weiter →</a>
+        <?php endif; ?>
+        </div>
+    <?php endif; ?>                       
+    </div>
     <!-- RECHTE SPALTE: Beitrag erstellen (startet versteckt) -->
     <aside class="post-form-column">
         <h2 class="post-form-heading">Neuen Gegenstand melden</h2>
@@ -125,7 +233,7 @@ include __DIR__ . '/includes/header.php';
 
             <div class="form-group">
                 <label for="image">Bild oder PDF hinzufügen (optional)</label>
-                <input type="file" id="image" name="image">
+                <input type="file" id="image" name="image" accept=".pdf, image/*">
             </div>
 
             <button type="submit" class="post-submit-btn">Posten</button>

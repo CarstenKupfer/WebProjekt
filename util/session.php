@@ -8,7 +8,7 @@ if (session_status() === PHP_SESSION_NONE){
 }
 
 
-// Timeout für inaktivität 
+// Timeout für inaktivität (30 min)
 $inactiveTimeout = 30 * 60;
 
 if(isset($_SESSION["last_activity"]) && (time() - $_SESSION["last_activity"]) > $inactiveTimeout){
@@ -19,7 +19,7 @@ if(isset($_SESSION["last_activity"]) && (time() - $_SESSION["last_activity"]) > 
     exit();
 }
 
-// Absolute Session-Lifetime
+// Absolute Session-Lifetime (4 std)
 $absoluteTimeout = 4 * 60 * 60;
 
 if (isset($_SESSION['login_time']) &&
