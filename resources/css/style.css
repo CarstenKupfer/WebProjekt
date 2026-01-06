@@ -366,6 +366,8 @@ img.img-border-medium{
 
 .post-form input[type="text"],
 .post-form textarea,
+.post-form input[type="date"],
+.post-form select,
 .post-form input[type="file"] {
     padding: 8px 10px;
     border-radius: 6px;

@@ -10,6 +10,58 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
+require_once __DIR__ . "/util/dbUtil.php";
+require_once __DIR__ . "/util/upload.php";
+
+if($_SERVER["REQUEST_METHOD"] === "POST"){
+
+    $title = trim($_POST["title"] ?? "");
+    $description = trim($_POST["description"] ?? "");
+    $type = $_POST["type"] ?? "";
+    $location = trim($_POST["location"] ?? "");
+    $event_date = $_POST["event_date"] ?? "";
+
+    if($title === "" || $description === "" || $type === "" || $location === "" || $event_date === ""){
+        $error = "Bitte alle Felder ausfüllen.";
+    }else{
+
+        $targetDir = "uploads/items/";
+        $targetFile = null;
+        
+        // Bild optional
+        if(!empty($_FILES["image"]["name"])){
+            $filename = basename($_FILES["image"]["name"]);
+            $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+            $allowed = ["pdf","jpg","jpeg","png"];
+             
+            if(!in_array($ext, $allowed)){
+                $error = "Nur PDF, JPG, oder PNG erlaubt.";
+            }else{
+                // kriegen uniqe name damit nichts überschrieben wird
+                $filename = uniqid("item_", true) . "." . $ext;
+                $targetFile = $targetDir . $filename;
+
+                if(!move_uploaded_file($_FILES["image"]["tmp_name"], $targetFile)){
+                    $error = "Fehler beim Upload.";
+                    $targetFile = null;
+                }
+            }
+        }
+        // Wenn keine Fehler ist, dann in DB speichern
+        if(!isset($error)){
+            createItemInDB($type, $title, $description, $location, $event_date, $targetFile, (int)$_SESSION["user_id"]);
+            header("Location: explore.php");
+            exit();
+
+        }
+
+    }
+
+
+
+}
+
+
 // Header + Navigation laden
 include __DIR__ . '/includes/header.php';
 ?>
@@ -48,6 +100,22 @@ include __DIR__ . '/includes/header.php';
                 <input type="text" id="title" name="title"
                        placeholder="z.B. 'Schlüsselbund gefunden'" required>
             </div>
+            <div class="form-group">
+                <label for="type">Art</label>
+                <select name="type" id="type" required>
+                    <option value="">Bitte wählen</option>
+                    <option value="lost">Verloren</option>
+                    <option value="found">Gefunden</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="location">Ort</label>
+                <input type="text" name="location" id="location" required>
+            </div>
+            <div class="form-group">
+                <label for="event_date">Datum</label>
+                <input type="date" name="event_date" id="event_date" required>
+            </div>
 
             <div class="form-group">
                 <label for="description">Beschreibung</label>
@@ -56,7 +124,7 @@ include __DIR__ . '/includes/header.php';
             </div>
 
             <div class="form-group">
-                <label for="image">Bild hinzufügen (optional)</label>
+                <label for="image">Bild oder PDF hinzufügen (optional)</label>
                 <input type="file" id="image" name="image">
             </div>
 
