@@ -34,7 +34,8 @@ CREATE TABLE `users` (
   `is_blocked` tinyint(1) NOT NULL DEFAULT 0,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id`),
-  UNIQUE KEY `email` (`email`)
+  UNIQUE KEY `unique_email` (`email`),
+  UNIQUE KEY `unique_username` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -74,9 +75,9 @@ CREATE TABLE `claims` (
 
 -- --------------------------------------------------------
 -- Seed data (test user)
--- Login: test@fh.at / 1234 (passwordhash)
+-- Login: test oder test@fh.at / 1234
 -- --------------------------------------------------------
-INSERT INTO `users` (`id`, `name`, `email`, `password_hash`, `role`, `is_blocked`, `created_at`) VALUES
-(1, 'Test User', 'test@fh.at', '$2y$10$LvG7b.36AS6AhauzRRdtB.x8qdHDMmLLy7nQ5IhSxYdMimB6vZJNq', 'user', 0, '2025-12-31 17:08:37');
+INSERT INTO `users` (`id`, `username`, `email`, `password_hash`, `role`, `is_blocked`, `created_at`) VALUES
+(1, 'test', 'test@fh.at', '$2y$10$LvG7b.36AS6AhauzRRdtB.x8qdHDMmLLy7nQ5IhSxYdMimB6vZJNq', 'user', 0, '2025-12-31 17:08:37');
 
 COMMIT;

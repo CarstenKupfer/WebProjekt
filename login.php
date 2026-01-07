@@ -20,38 +20,44 @@ require_once __DIR__ . "/util/dbUtil.php";
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Benutzer-Eingaben holen
-    $username = trim($_POST['username'] ?? '');
+    $login = trim($_POST['login'] ?? ''); // username ODER email
     $password = $_POST['password'] ?? '';
 
-    if ($username === "" || $password === "") {
-        $error = "Bitte Username und Passwort eingeben.";
+    if ($login === "" || $password === "") {
+        $error = "Bitte Username/E-Mail und Passwort eingeben.";
     } else {
         try {
             $db = getDb();
 
-            $stmt = $db->prepare("SELECT id, password_hash, role, is_blocked FROM users WHERE username = ? LIMIT 1");
+            $stmt = $db->prepare(
+                "SELECT id, username, password_hash, role, is_blocked
+                 FROM users
+                 WHERE username = ? OR email = ?
+                 LIMIT 1"
+            );
             if (!$stmt) {
                 throw new RuntimeException($db->error);
             }
 
-            $stmt->bind_param("s", $username);
+            $stmt->bind_param("ss", $login, $login);
             $stmt->execute();
             $res = $stmt->get_result();
             $user = $res->fetch_assoc();
             $stmt->close();
 
             if (!$user) {
-                $error = "Username oder Passwort falsch <br> Bitte erneut versuchen.";
+                $error = "Username/E-Mail oder Passwort falsch.";
             } elseif ((int)$user["is_blocked"] === 1) {
                 $error = "Dieser Account ist gesperrt.";
             } elseif (!password_verify($password, $user["password_hash"])) {
-                $error = "Username oder Passwort falsch. <br> Bitte erneut versuchen.";
+                $error = "Username/E-Mail oder Passwort falsch.";
             } else {
-                // Bei erfolgreichem Login
-                $_SESSION["user_id"] = (int)$user["id"];
-                $_SESSION["role"] = $user["role"];
+                // Erfolgreicher Login
+                session_regenerate_id(true); // Best Practice (Slides)
 
-                // Session-Timing für inaktiviät tracken setzten
+                $_SESSION["user_id"] = (int)$user["id"];
+                $_SESSION["username"] = $user["username"];
+                $_SESSION["role"] = $user["role"];
                 $_SESSION['login_time'] = time();
                 $_SESSION['last_activity'] = time();
 
@@ -71,17 +77,20 @@ include __DIR__ . '/includes/header.php';
 
 <section class="login-wrapper">
 
-    <!-- Linke Seite: Login Formular -->
     <div class="login-box">
         <h1>Login</h1>
 
         <?php if (isset($error)): ?>
-            <p class="login-error"><?= $error ?></p>
+            <p class="login-error"><?= htmlspecialchars($error, ENT_QUOTES, "UTF-8") ?></p>
         <?php endif; ?>
 
         <form method="post" class="login-form">
-            <label for="username">Username</label>
-            <input type="text" id="username" name="username" required value="<?= htmlspecialchars($username ?? "", ENT_QUOTES, "UTF-8") ?>">
+            <label for="login">Username oder E-Mail</label>
+            <input type="text"
+                   id="login"
+                   name="login"
+                   required
+                   value="<?= htmlspecialchars($login ?? "", ENT_QUOTES, "UTF-8") ?>">
 
             <label for="password">Passwort</label>
             <input type="password" id="password" name="password" required>
@@ -90,7 +99,6 @@ include __DIR__ . '/includes/header.php';
         </form>
     </div>
 
-    <!-- Rechte Seite: Bild -->
     <div class="login-image-box">
         <img src="resources/images/StartseiteFoto.jpg"
              alt="FH Bild"
@@ -104,7 +112,4 @@ include __DIR__ . '/includes/header.php';
     <a href="register.php">Jetzt registrieren</a>
 </p>
 
-<?php
-// Footer laden
-include __DIR__ . '/includes/footer.php';
-?>
+<?php include __DIR__ . '/includes/footer.php'; ?>
