@@ -3,19 +3,16 @@ nur FH-Mail erlauben Explore Page zu öffnen (Sicherheitscheck)
 
 DaSt:
 Admin-Seite machen
-Neues Design mit Bootstrap
-localhost/myphpadmin bei allen gleich machen
 
 explore.php -> Suchen im Feed (Titel/Ort)
 explore.php -> filtern: verloren/ gefunden, neuste Beitrage
-explore.php -> Admin kann Posts löschen und bearbeiten
 explore.php -> Claim button, dann Direct Message schreiben wenn man was gefunden hat.
 
 
 profile.php -> Eigene Posts bearbeiten/löschen
 
 
-Bootstrap -> Nicht komplett Overhaul sondern nur so paar Sachen damit ändern (Pagination, Explore.php (Feed), profile.php)
 
-
-
+Michi:
+Admin-Seite machen (Kann User sperren, kann Posts löschen und bearbeiten in explore.php, Metrics?)
+Neues Design allgemein und mit Bootstrap (Nicht komplett Overhaul sondern nur so paar Sachen damit ändern (Pagination, Explore.php (Feed), profile.php))
