@@ -5,7 +5,7 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 // Zugriff nur für eingeloggte User
-if (!isset($_SESSION['user_id'])) {
+if (!isset($_SESSION["user_id"])) {
     header("Location: login.php");
     exit;
 }
@@ -100,7 +100,7 @@ try{
 }
 
 // Header + Navigation laden
-include __DIR__ . '/includes/header.php';
+include __DIR__ . "/includes/header.php";
 ?>
 
 <section class="explore-layout">
@@ -122,7 +122,7 @@ include __DIR__ . '/includes/header.php';
         <div class="posts-list">
 
     <?php if (isset($feedError)): ?>
-        <p class="login-error"><?= htmlspecialchars($feedError, ENT_QUOTES, 'UTF-8') ?></p>
+        <p class="login-error"><?= htmlspecialchars($feedError, ENT_QUOTES, "UTF-8") ?></p>
     <?php endif; ?>
 
     <?php if (empty($items)): ?>
@@ -134,43 +134,43 @@ include __DIR__ . '/includes/header.php';
         <?php foreach ($items as $item): ?>
             <article class="post-card">
                 <div class="post-card-top">
-                    <div class="post-badge <?= $item['type'] === 'lost' ? 'badge-lost' : 'badge-found' ?>">
-                        <?= htmlspecialchars($item['type'] === 'lost' ? 'VERLOREN' : 'GEFUNDEN', ENT_QUOTES, 'UTF-8') ?>
+                    <div class="post-badge <?= $item["type"] === "lost" ? "badge-lost" : "badge-found" ?>">
+                        <?= htmlspecialchars($item["type"] === "lost" ? "VERLOREN" : "GEFUNDEN", ENT_QUOTES, "UTF-8") ?>
                     </div>
 
                     <div class="post-meta">
-                        <span class="post-user">@<?= htmlspecialchars($item['username'], ENT_QUOTES, 'UTF-8') ?></span>
+                        <span class="post-user">@<?= htmlspecialchars($item["username"], ENT_QUOTES, "UTF-8") ?></span>
                     </div>
                 </div>
 
-                <h3 class="post-title"><?= htmlspecialchars($item['title'], ENT_QUOTES, 'UTF-8') ?></h3>
+                <h3 class="post-title"><?= htmlspecialchars($item["title"], ENT_QUOTES, "UTF-8") ?></h3>
 
                 <p class="post-info">
-                    <strong>Ort:</strong> <?= htmlspecialchars($item['location'], ENT_QUOTES, 'UTF-8') ?>
+                    <strong>Ort:</strong> <?= htmlspecialchars($item["location"], ENT_QUOTES, "UTF-8") ?>
                     &nbsp;|&nbsp;
                     <strong>Datum:</strong> <?= date("d.m.Y", strtotime($item["event_date"])) ?>
                 </p>
 
                 <p class="post-desc">
-                    <?= nl2br(htmlspecialchars($item['description'], ENT_QUOTES, 'UTF-8')) ?>
+                    <?= nl2br(htmlspecialchars($item["description"], ENT_QUOTES, "UTF-8")) ?>
                 </p>
 
-                <?php if (!empty($item['image_path'])): ?>
+                <?php if (!empty($item["image_path"])): ?>
                     <?php
-                        $path = $item['image_path'];
+                        $path = $item["image_path"];
                         $ext = strtolower(pathinfo($path, PATHINFO_EXTENSION));
                     ?>
 
-                    <?php if ($ext === 'pdf'): ?>
+                    <?php if ($ext === "pdf"): ?>
                         <a class="post-file"
-                           href="<?= htmlspecialchars($path, ENT_QUOTES, 'UTF-8') ?>"
+                           href="<?= htmlspecialchars($path, ENT_QUOTES, "UTF-8") ?>"
                            target="_blank" rel="noopener">
                             PDF ansehen
                         </a>
                     <?php else: ?>
                         <a href="<?= htmlspecialchars($path, ENT_QUOTES, "UTF-8") ?>" target="_blank" rel="noopener">
                         <img class="post-image"
-                             src="<?= htmlspecialchars($path, ENT_QUOTES, 'UTF-8') ?>"
+                             src="<?= htmlspecialchars($path, ENT_QUOTES, "UTF-8") ?>"
                              alt="Item Bild">
                         </a>     
                     <?php endif; ?>
@@ -187,7 +187,7 @@ include __DIR__ . '/includes/header.php';
 
         <?php for ($p = 1; $p <= $totalPages; $p++): ?>
             <a href="explore.php?page=<?= $p ?>"
-               class="<?= $p === $page ? 'active' : '' ?>">
+               class="<?= $p === $page ? "active" : "" ?>">
                 <?= $p ?>
             </a>
         <?php endfor; ?>
@@ -243,5 +243,5 @@ include __DIR__ . '/includes/header.php';
 
 <?php
 // Footer einbinden
-include __DIR__ . '/includes/footer.php';
+include __DIR__ . "/includes/footer.php";
 ?>

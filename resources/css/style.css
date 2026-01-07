@@ -429,6 +429,38 @@ img.img-border-medium{
     border: 1px solid #eee;
 }
 
+.post-card {
+    position: relative;
+    padding: 20px 0;
+}
+
+.post-card::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 80%;
+    height: 1px;
+    background: #ddd;
+}
+
+
+
+/* PROFILE PAGE */
+
+.profile-page{
+    max-width: 800px;
+    margin:0 auto;
+}
+
+.profile-box{
+    background: #fff;
+    padding: 16px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    margin-bottom: 24px;
+}
+
 /* Mobile: untereinander statt nebeneinander */
 @media (max-width: 900px) {
     .explore-layout {
