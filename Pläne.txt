@@ -6,11 +6,16 @@ Admin-Seite machen
 Neues Design mit Bootstrap
 localhost/myphpadmin bei allen gleich machen
 
-explore.php -> Neuste Beiträge "filtern", sowie bei Beiträgen die älter sind als 30 Tage (Badge hinzufügen (alter Post))
 explore.php -> Suchen im Feed (Titel/Ort)
-explore.php -> Filte: verloren/ gefunden
+explore.php -> filtern: verloren/ gefunden, neuste Beitrage
+explore.php -> Admin kann Posts löschen und bearbeiten
+explore.php -> Claim button, dann Direct Message schreiben wenn man was gefunden hat.
 
-profile.php u. explore.php -> Eigene Posts bearbeiten/löschen
+
+profile.php -> Eigene Posts bearbeiten/löschen
 
 
 Bootstrap -> Nicht komplett Overhaul sondern nur so paar Sachen damit ändern (Pagination, Explore.php (Feed), profile.php)
+
+
+
