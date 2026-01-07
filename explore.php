@@ -64,6 +64,24 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
 }
 
+// ----------------------------
+// FILTER für Items
+// ----------------------------
+
+$filterType = $_GET["type"] ?? "all";    // filtern nach alle | verloren | gefunden
+$sort = $_GET["sort"] ?? "new";          // filtern nach neu | alt
+
+// Whitelist
+if(!in_array($filterType, ["all", "lost", "found"], true)){
+    $filterType = "all";
+}
+
+if(!in_array($sort, ["new", "old"], true)){
+    $sort = "new";
+}
+
+$queryBase = "type=" . urlencode($filterType) . "$sort=" . urlencode($sort);
+
 // Feed-Pagination: wie viele Items pro Seite
 $itemsPerPage = 5;
 
@@ -79,26 +97,61 @@ try {
     $db = getDb();
 
     // Items laden inkl. Username vom Ersteller
+
+    $orderBy = ($sort === "old") ? "ASC" : "DESC";
+
     $sql = "SELECT i.id, i.type, i.title, i.description, i.location, i.event_date, i.image_path, i.created_at, u.username
             FROM items i
-            JOIN users u ON u.id = i.user_id
-            ORDER BY i.created_at DESC
-            LIMIT ? OFFSET ?";
+            JOIN users u ON u.id = i.user_id";
+
+    $params = [];
+    $types = "";
+
+    if($filterType !== "all"){
+        $sql .= " WHERE i.type = ?";
+        $params[] = $filterType;
+        $types .= "s";
+    }
+
+    // Filter filter nach created_at also wann der Post vom User gepostet wurde nicht welches Datum er angegeben hat als Fundddatum
+    $sql .= " ORDER BY i.created_at $orderBy LIMIT ? OFFSET ?";
+
+    $params[] = $itemsPerPage;
+    $params[] = $offset;
+    $types .= "ii";
 
     $stmt = $db->prepare($sql);
-    $stmt->bind_param("ii", $itemsPerPage, $offset);
+    $stmt->bind_param($types, ...$params);
     $stmt->execute();
     $res = $stmt->get_result();
     $items = $res->fetch_all(MYSQLI_ASSOC);
     $stmt->close();
 
     // Für Pagination: Gesamtanzahl zählen
-    $resCount = $db->query("SELECT COUNT(*) AS cnt FROM items");
-    if (!$resCount) {
-        throw new RuntimeException($db->error);
+    $countSql = "SELECT COUNT(*) AS cnt FROM items";
+    $countParams = [];
+    $countTypes = "";
+
+    if($filterType !== "all"){
+        $countSql .= " WHERE type = ?";
+        $countParams[] = $filterType;
+        $countTypes .= "s";
     }
 
-    $totalItems = (int)$resCount->fetch_assoc()["cnt"];
+    if($filterType === "all"){
+        $resCount = $db->query($countSql);
+        if(!$resCount){
+            throw new RuntimeException($db->error);
+        }
+        $totalItems = (int)$resCount->fetch_assoc()["cnt"];
+    }else{
+        $stmtCount = $db->prepare($countSql);
+        $stmtCount->bind_param($countTypes, ...$countParams);
+        $stmtCount->execute();
+        $resCount = $stmtCount->get_result();
+        $totalItems = (int)$resCount->fetch_assoc()["cnt"];
+        $stmtCount->close();
+    }
     $totalPages = (int)ceil($totalItems / $itemsPerPage);
 
 } catch (Throwable $e) {
@@ -127,6 +180,28 @@ include __DIR__ . "/includes/header.php";
                 + Beitrag melden
             </label>
         </div>
+
+        <form method="get" class="feed-filters">
+            <label>
+                Typ:
+                <select name="type" onchange="this.form.submit()">
+                    <option value="all"   <?= $filterType === "all" ? "selected" : "" ?>>Alle</option>
+                    <option value="lost"  <?= $filterType === "lost" ? "selected" : "" ?>>Verloren</option>
+                    <option value="found" <?= $filterType === "found" ? "selected" : "" ?>>Gefunden</option>
+                </select>
+            </label>
+
+            <label>
+                Sortierung:
+                <select name="sort" onchange="this.form.submit()">
+                    <option value="new" <?= $sort === "new" ? "selected" : "" ?>>Neueste</option>
+                    <option value="old" <?= $sort === "old" ? "selected" : "" ?>>Älteste</option>
+                </select>
+            </label>
+
+            <!-- Bei Filterwechsel immer wieder auf Seite 1 zurückschicken-->
+            <input type="hidden" name="page" value="1">
+        </form>
 
         <div class="posts-list">
 
@@ -193,17 +268,17 @@ include __DIR__ . "/includes/header.php";
         <?php if ($totalPages > 1): ?>
             <div class="pagination">
                 <?php if ($page > 1): ?>
-                    <a href="explore.php?page=<?= $page - 1 ?>">Zurück</a>
+                    <a href="explore.php?<?= $queryBase ?>$page=<?= $page - 1 ?>">Zurück</a>
                 <?php endif; ?>
 
                 <?php for ($p = 1; $p <= $totalPages; $p++): ?>
-                    <a href="explore.php?page=<?= $p ?>" class="<?= $p === $page ? "active" : "" ?>">
+                    <a href="explore.php?<?= $queryBase ?>&page=<?= $p ?>" class="<?= $p === $page ? "active" : "" ?>">
                         <?= $p ?>
                     </a>
                 <?php endfor; ?>
 
                 <?php if ($page < $totalPages): ?>
-                    <a href="explore.php?page=<?= $page + 1 ?>">Weiter</a>
+                    <a href="explore.php?<?= $queryBase ?>&page=<?= $page + 1 ?>">Weiter</a>
                 <?php endif; ?>
             </div>
         <?php endif; ?>

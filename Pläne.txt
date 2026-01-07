@@ -1,16 +1,10 @@
-nur FH-Mail erlauben Explore Page zu öffnen (Sicherheitscheck)
-
 
 DaSt:
-Admin-Seite machen
-
 explore.php -> Suchen im Feed (Titel/Ort)
-explore.php -> filtern: verloren/ gefunden, neuste Beitrage
 explore.php -> Claim button, dann Direct Message schreiben wenn man was gefunden hat.
 
 
 profile.php -> Eigene Posts bearbeiten/löschen
-
 
 
 Michi:

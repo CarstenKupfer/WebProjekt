@@ -444,7 +444,18 @@ img.img-border-medium{
     background: #ddd;
 }
 
-
+.feed-filters{
+    display:flex;
+    gap:12px;
+    align-items:center;
+    margin: 10px 0 16px;
+}
+.feed-filters select{
+    padding:6px 10px;
+    border-radius:8px;
+    border:1px solid #ccc;
+    background:#fff;
+}
 
 /* PROFILE PAGE */
 

@@ -28,7 +28,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = "Bitte alle Felder ausfüllen.";
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $error = "Bitte eine gültige E-Mail-Adresse eingeben.";
-    } elseif (strlen($username) < 3 || strlen($username) > 30) {
+    }elseif (!str_ends_with(strtolower($email), "@technikum-wien.at")){
+        $error = "Nur E-Mail Adressen der FH Technikum Wien sind erlaubt.";
+    }elseif (strlen($username) < 3 || strlen($username) > 30) {
         $error = "Username muss zwischen 3 und 30 Zeichen lang sein.";
     } elseif (!preg_match('/^[a-zA-Z0-9_]+$/', $username)) {
         $error = "Username darf nur Buchstaben, Zahlen und _ enthalten.";
