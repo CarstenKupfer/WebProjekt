@@ -129,7 +129,7 @@ include __DIR__ . '/includes/header.php';
 
     <!-- Rechte Seite: Bild -->
     <div class="login-image-box">
-        <img src="uploads/items/StartseiteFoto.jpg"
+        <img src="resources/images/StartseiteFoto.jpg"
              alt="Registrieren Bild"
              class="login-image">
     </div>
