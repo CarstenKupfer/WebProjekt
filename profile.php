@@ -86,7 +86,7 @@ try{
                     <p class="claim-item"><strong>Item: </strong><?= htmlspecialchars($c["item_title"], ENT_QUOTES, "UTF-8") ?> (<?= $c["item_type"] === "lost" ? "Verloren" :
                     "Gefunden" ?>)</p>
 
-                    <p class="claim-msg"><?= nl2br(htmlspecialchars($c["message"], ENT_QUOTES, "UTF-8")) ?></p>
+                    <p class="claim-msg"><?= htmlspecialchars($c["message"], ENT_QUOTES, "UTF-8") ?></p>
                 </div>    
             <?php endforeach; ?>
         <?php endif; ?>
