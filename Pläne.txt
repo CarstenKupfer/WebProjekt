@@ -9,3 +9,6 @@ profile.php -> Eigene Posts bearbeiten/löschen
 Michi:
 Admin-Seite machen (Kann User sperren, kann Posts löschen und bearbeiten in explore.php, Metrics?)
 Neues Design allgemein und mit Bootstrap (Nicht komplett Overhaul sondern nur so paar Sachen damit ändern (Pagination, Explore.php (Feed), profile.php))
+
+Abgabe Webprojek: Code vereinfachen (Syntax dien von Chatgpt geschrieben lernen)
+Projekt Spezifikation Changelog machen änderungen zeigen und das mit Zeilen hinschreiben wo User storys gecodet wurden.
