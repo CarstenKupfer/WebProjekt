@@ -27,6 +27,30 @@ $stmt->bind_param("i", $_SESSION["user_id"]);
 $stmt->execute();
 $items = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 $stmt->close();
+
+
+// ----------------------------
+// CLAIMS (Inbox) laden
+// ----------------------------
+try{
+    $db = getDb();
+    $uid = (int)$_SESSION["user_id"];
+
+    // Eingegangene Claims (Items die jemand von mir geclaimt hat)
+
+    $stmt = $db->prepare("SELECT c.id AS claim_id, c.message, c.created_at, u.username AS claimer_username, i.id AS item_id, i.title AS item_title, i.type AS item_type
+    FROM claims c JOIN items i ON i.id = c.item_id JOIN users u on u.id = c.claimer_id WHERE i.user_id = ? ORDER BY c.created_at DESC LIMIT 50");
+
+    $stmt->bind_param("i", $uid);
+    $stmt->execute();
+    $incomingClaims = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+    $stmt->close();
+
+}catch (Throwable $e){
+    $claimsError = "Claims konnten nicht geladen werden: " . ($e->getMessage());
+    $incomingClaims = [];
+}
+
 ?>
 
 <?php include __DIR__ . "/includes/header.php"; ?>
@@ -38,6 +62,37 @@ $stmt->close();
         <p><strong>Username:</strong> <?= htmlspecialchars($user["username"], ENT_QUOTES, "UTF-8") ?></p>
         <p><strong>E-Mail:</strong> <?= htmlspecialchars($user["email"], ENT_QUOTES, "UTF-8") ?></p>
     </div>
+
+    <h2>Claims</h2>
+
+    <?php if (isset($claimsError)): ?>
+        <p class="login-error"><?= htmlspecialchars($claimsError, ENT_QUOTES, "UTF-8") ?></p>
+    <?php endif; ?>
+
+        <!-- Eingegangene Claims -->
+    <div class="claims-box">
+        <h3>Eingegangene Claims</h3>
+
+        <?php if (empty($incomingClaims)): ?>
+            <p class="no-posts-hint">Noch keine Claims für deine Items.</p>
+        <?php else: ?>
+            <?php foreach ($incomingClaims as $c): ?>
+                <div class="claim-card">
+                    <div class="claim-top">
+                        <span class="claim-user">@<?= htmlspecialchars($c["claimer_username"], ENT_QUOTES, "UTF-8") ?></span>
+                        <span class="claim-date"><?= date("d.m.Y", strtotime($c["created_at"])) ?></span>
+                    </div>
+
+                    <p class="claim-item"><strong>Item: </strong><?= htmlspecialchars($c["item_title"], ENT_QUOTES, "UTF-8") ?> (<?= $c["item_type"] === "lost" ? "Verloren" :
+                    "Gefunden" ?>)</p>
+
+                    <p class="claim-msg"><?= nl2br(htmlspecialchars($c["message"], ENT_QUOTES, "UTF-8")) ?></p>
+                </div>    
+            <?php endforeach; ?>
+        <?php endif; ?>
+    </div>
+
+    <hr class="section-divider">
 
     <h2>Meine Beiträge</h2>
 

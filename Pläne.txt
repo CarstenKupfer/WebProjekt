@@ -1,8 +1,5 @@
 
 DaSt:
-explore.php -> Claim button, dann Direct Message schreiben wenn man was gefunden hat. (profile.php logik fehlt noch wo man message dann sieht!)
-
-
 profile.php -> Eigene Posts bearbeiten/löschen
 
 
