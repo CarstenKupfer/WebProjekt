@@ -100,7 +100,7 @@ try {
 
     $orderBy = ($sort === "old") ? "ASC" : "DESC";
 
-    $sql = "SELECT i.id, i.type, i.title, i.description, i.location, i.event_date, i.image_path, i.created_at, u.username
+    $sql = "SELECT i.id, i.user_id, i.type, i.title, i.description, i.location, i.event_date, i.image_path, i.created_at, u.username
             FROM items i
             JOIN users u ON u.id = i.user_id";
 
@@ -259,6 +259,16 @@ include __DIR__ . "/includes/header.php";
                                          alt="Item Bild">
                                 </a>
                             <?php endif; ?>
+                        <?php endif; ?>
+
+
+                        <!-- Wenn die user_id vom item gleich user_id von der Session ist dann wird Claim button nicht gezeigt also eigene Items-->
+                        <?php if((int)$item["user_id"] !== (int)$_SESSION["user_id"]): ?>
+                            <div class="post-actions">
+                                <a class="claim-btn" href="claim.php?item_id=<?= (int)$item["id"] ?>">
+                                    Claim / Kontakt
+                                </a>
+                            </div>
                         <?php endif; ?>
                     </article>
                 <?php endforeach; ?>

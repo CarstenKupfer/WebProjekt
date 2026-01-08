@@ -457,6 +457,68 @@ img.img-border-medium{
     background:#fff;
 }
 
+.post-file{
+    display: inline-block;
+    padding: 8px 12px;
+    border-radius: 999px;
+    border: 1px solid #ccc;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #222;
+    background: #fff;
+}
+
+.post-file:hover{
+    background: #ff6b00;
+    color: #fff;
+    border-color: #ff6b00;
+}
+
+.post-actions{
+    margin-top: 10px;
+}
+
+.claim-btn{
+    display: inline-block;
+    padding: 8px 12px;
+    border-radius: 999px;
+    border: 1px solid #ccc;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #222;
+    background: #fff;
+}
+
+.claim-btn:hover{
+    background: #ff6b00;
+    color: #fff;
+    border-color: #ff6b00;
+}
+
+/* Claim PAGE */
+
+.claim-cancel{
+    margin-right: 66%;
+    display: inline-block;
+    padding: 8px 12px;
+    border-radius: 999px;
+    border: 1px solid #ccc;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #222;
+    background: #fff;
+}
+
+.claim-cancel:hover{
+    background: #ff6b00;
+    color: #fff;
+    border-color: #ff6b00;
+}
+
+
 /* PROFILE PAGE */
 
 .profile-page{

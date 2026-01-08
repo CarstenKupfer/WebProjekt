@@ -5,6 +5,13 @@ SET time_zone = "+00:00";
 SET NAMES utf8mb4;
 
 -- --------------------------------------------------------
+-- Create DB user (only for lostandfound)
+-- --------------------------------------------------------
+CREATE USER IF NOT EXISTS 'lostandfoundUser'@'localhost' IDENTIFIED BY 'Dl/RxOVNc7VSFwZp';
+GRANT ALL PRIVILEGES ON `lostandfound`.* TO 'lostandfoundUser'@'localhost';
+FLUSH PRIVILEGES;
+
+-- --------------------------------------------------------
 -- Create / select database
 -- --------------------------------------------------------
 CREATE DATABASE IF NOT EXISTS `lostandfound`
