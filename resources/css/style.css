@@ -593,6 +593,34 @@ img.img-border-medium{
     line-height: 1.4;
 }
 
+.item-actions{
+    display: flex;
+    gap: 10px;
+    margin-top: 8px;
+    align-items: center;
+}
+
+.inline-form{ display: inline; }
+
+.btn-small{
+    padding: 6px 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    background: #fff;
+    text-decoration: none;
+    color: #222;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-danger{
+    border-color: #ff6b00;
+    background: #ff6b00;
+    color: #fff;
+}
+.btn-danger:hover{ background: #ff8a33; }
+
 
 
 /* Mobile: untereinander statt nebeneinander */

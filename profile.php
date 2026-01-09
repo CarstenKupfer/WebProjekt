@@ -12,6 +12,50 @@ if (!isset($_SESSION["user_id"])) {
 
 require_once __DIR__ . "/util/dbUtil.php";
 
+// ----------------------------
+// ITEM LÖSCHEN 
+// ----------------------------
+if($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["delete_item_id"])){
+    $deleteId = (int)$_POST["delete_item_id"];
+
+
+try{
+    $db = getDb();
+    $uid = (int)$_SESSION["user_id"];
+
+    // Item laden (nur eigenes Item darf gelöscht werden logisch)
+    $stmt = $db->prepare("SELECT image_path FROM items WHERE id = ? AND user_id = ? LIMIT 1");
+    $stmt->bind_param("ii", $deleteId, $uid);
+    $stmt->execute();
+    $itemRow = $stmt->get_result()->fetch_assoc();
+    $stmt->close();
+
+    if($itemRow){
+        //Item löschen
+        $stmt = $db->prepare("DELETE FROM items WHERE id = ? and user_id = ? LIMIT 1");
+        $stmt->bind_param("ii", $deleteId, $uid);
+        $stmt->execute();
+        $stmt->close();
+
+        // Datei aus uploads/items löschen, wenn vorhanden
+        if(!empty($itemRow["image_path"])){
+            $file = __DIR__ . "/" . $itemRow["image_path"];
+
+            if(file_exists($file)){
+                unlink($file); //unlink löscht die Datei
+            }    
+        }
+    }
+
+    header("Location: profile.php");
+    exit();
+
+}catch (Throwable $e){
+    $profileError = "Löschung fehlgeschlagen: " . ($e->getMessage());
+    }
+}
+
+
 $db = getDb();
 
 // Userdaten für die Profilbox laden
@@ -20,6 +64,7 @@ $stmt->bind_param("i", $_SESSION["user_id"]);
 $stmt->execute();
 $user = $stmt->get_result()->fetch_assoc();
 $stmt->close();
+
 
 // Eigene Items des Users laden (neueste zuerst)
 $stmt = $db->prepare("SELECT id, type, title, location, event_date, image_path FROM items WHERE user_id = ? ORDER BY created_at DESC");
@@ -94,7 +139,7 @@ try{
 
     <hr class="section-divider">
 
-    <h2>Meine Beiträge</h2>
+    <h2>Meine Beiträge</h2> 
 
     <?php if (empty($items)): ?>
         <p class="no-posts-hint">Du hast noch keine Beiträge erstellt.</p>
@@ -132,7 +177,16 @@ try{
                         <?php endif; ?>
                     <?php endif; ?>
 
-                    <!-- Später: Bearbeiten / Löschen Buttons -->
+                    <!-- Bearbeiten / Löschen Buttons -->
+                <div class="item-actions">
+                    <a class="btn-small" href="edit_item.php?id=<?= (int)$item["id"] ?>">Bearbeiten</a>
+
+                    <form method="post" class="inline-form">
+                        <input type="hidden" name="delete_item_id" value="<?= (int)$item["id"] ?>">
+                        <button type="submit" class="btn-small btn-danger">Löschen</button>
+                    </form>
+                </div>
+
                 </article>
             <?php endforeach; ?>
         </div>

@@ -2,6 +2,15 @@
 DaSt:
 profile.php -> Eigene Posts bearbeiten/löschen
 
+ALTER TABLE claims
+DROP FOREIGN KEY claims_ibfk_1;
+
+ALTER TABLE claims
+ADD CONSTRAINT claims_ibfk_1
+FOREIGN KEY (item_id) REFERENCES items(id)
+ON DELETE CASCADE;
+auf Laptop machen für Web Abgabe.
+
 
 Michi:
 Admin-Seite machen (Kann User sperren, kann Posts löschen und bearbeiten in explore.php, Metrics?)
