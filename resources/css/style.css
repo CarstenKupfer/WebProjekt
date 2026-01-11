@@ -634,3 +634,24 @@ img.img-border-medium{
         width: 100%;
     }
 }
+
+.btn-small{
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  background: #fff;
+  cursor: pointer;
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.btn-danger{
+  background: #ff3b30;
+  border-color: #ff3b30;
+  color: #fff;
+}
+
+.inline-form{ display:inline; }
+.item-actions{ display:flex; gap:10px; align-items:center; }
+
